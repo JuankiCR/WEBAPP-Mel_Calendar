@@ -12,3 +12,4 @@ export const storage = new Storage(client);
 export const APPWRITE_DATABASE_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID!;
 export const APPWRITE_NOTAS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_NOTAS_COLLECTION_ID!;
 export const APPWRITE_BUCKET_ID = import.meta.env.VITE_APPWRITE_BUCKET_ID!;
+export const APPWRITE_USER_SETTINGS_COLLECTION_ID = import.meta.env.VITE_APPWRITE_USER_SETTINGS_COLLECTION_ID!;

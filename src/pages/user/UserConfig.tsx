@@ -1,8 +1,9 @@
 // src/pages/user/UserConfig.tsx
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Button, Input } from "waddle-ui";
 import { useTheme } from "@/hooks/useTheme";
 import { extractColorFromCssVar } from "@/utils/ExtractColorFromCssVar";
+import { getUserSettings, updateUserSettings, WorkingDay } from "@/services/userSettings";
 import "./UserConfig.css";
 
 type EditableVar = {
@@ -75,6 +76,80 @@ export default function UserConfig() {
     () => (theme === "light" ? "Claro" : "Oscuro"),
     [theme]
   );
+
+  // Cargar settings desde Appwrite (solo una vez al montar)
+  useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
+      try {
+        const settings = await getUserSettings();
+        if (cancelled) return;
+
+        // workingDay -> CSS vars
+        if (settings.workingDay) {
+          const wd = JSON.parse(settings.workingDay) as WorkingDay;
+
+          if (wd.start)
+            setThemeVar("--hora-inicio-jornada", wd.start);
+          if (wd.end)
+            setThemeVar("--hora-fin-jornada", wd.end);
+          if (wd.lunchOutFrom)
+            setThemeVar("--hora-salida-comida-desde", wd.lunchOutFrom);
+          if (wd.lunchOutTo)
+            setThemeVar("--hora-salida-comida-hasta", wd.lunchOutTo);
+          if (wd.maxLunchMinutes != null)
+            setThemeVar(
+              "--duracion-max-comida-min",
+              String(wd.maxLunchMinutes)
+            );
+        }
+
+        // themeOverrides -> CSS vars
+        if (settings.themeOverrides) {
+          const parsed = JSON.parse(settings.themeOverrides) as Record<
+            string,
+            string
+          >;
+          Object.entries(parsed).forEach(([name, value]) =>
+            setThemeVar(name, value)
+          );
+        }
+      } catch (err) {
+        console.error("Error cargando user_settings", err);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Guardar en Appwrite
+  const handleSave = async () => {
+    try {
+      const workingDay: WorkingDay = {
+        start: getVarValue("--hora-inicio-jornada") || undefined,
+        end: getVarValue("--hora-fin-jornada") || undefined,
+        lunchOutFrom: getVarValue("--hora-salida-comida-desde") || undefined,
+        lunchOutTo: getVarValue("--hora-salida-comida-hasta") || undefined,
+        maxLunchMinutes: Number(
+          getVarValue("--duracion-max-comida-min") || "0"
+        ) || undefined,
+      };
+
+      await updateUserSettings({
+        workingDay: JSON.stringify(workingDay),
+        themeOverrides: JSON.stringify(overrides ?? {}),
+      });
+
+      console.log("Configuración guardada ✅");
+    } catch (err) {
+      console.error(err);
+      console.log("Error al guardar configuración");
+    }
+  };
 
   return (
     <div className="settings-page">
@@ -163,6 +238,14 @@ export default function UserConfig() {
             onClick={resetThemeVars}
           >
             Restablecer colores del tema {themeLabel}
+          </Button>
+
+          <Button
+            color={primaryColor}
+            type="button"
+            onClick={handleSave}
+          >
+            Guardar configuración
           </Button>
         </footer>
       </section>
