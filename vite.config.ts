@@ -18,9 +18,9 @@ export default defineConfig({
       },
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'Waddle',
-        short_name: 'Waddle',
-        description: 'App de finanzas personales',
+        name: 'Calendario 📅',
+        short_name: 'Calendario 📅',
+        description: 'Calendario para trackear horarios laborales',
         theme_color: '#ffffff',
         background_color: '#ffffff',
         display: 'standalone',
@@ -50,9 +50,6 @@ export default defineConfig({
     }),
   ],
   base: '/',
-  build: {
-    outDir: 'out',
-  },
   server: {
     allowedHosts: ['.ngrok-free.app'],
   },

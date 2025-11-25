@@ -1,22 +1,25 @@
-import React, { useEffect } from "react";
+// src/pages/StartRedirect.tsx
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSettingsStore } from "@/stores/settingsStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { FullPageLoader } from "@/components/UI/FullPageLoader";
 
-const StartRedirect: React.FC = () => {
+export default function StartRedirect() {
+  const { user, initialized, fetchUser } = useAuthStore();
   const navigate = useNavigate();
-  const { startPath, hydrated } = useSettingsStore();
 
   useEffect(() => {
-    if (!hydrated) return;
-    if (startPath === "/") {
-      useSettingsStore.setState({ startPath: "/wallet" });
-      navigate("/wallet", { replace: true });
-    } else {
-      navigate(startPath, { replace: true });
+    if (!initialized) {
+      fetchUser();
+      return;
     }
-  }, [navigate, startPath, hydrated]);
 
-  return null;
-};
+    if (user) {
+      navigate("/home", { replace: true });
+    } else {
+      navigate("/login", { replace: true });
+    }
+  }, [initialized, user, fetchUser, navigate]);
 
-export default StartRedirect;
+  return <FullPageLoader message="Preparando tu espacio..." />;
+}

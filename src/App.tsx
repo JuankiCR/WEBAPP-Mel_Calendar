@@ -1,19 +1,19 @@
+// src/App.tsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
-import NotificationsInitializer from "./components/Modal/NotificationsInitializer";
 
-// Paginas
+import GuestLayout from "./layouts/GuestLayout";
+import DefaultLayout from "./layouts/DefaultLayout";
+// import BottomNavLayout from "./layouts/BottomNavLayout";
+
 import StartRedirect from "@/pages/StartRedirect";
-import WalletHome from "@/pages/Wallet/Home";
-import Sections from "@/pages/Wallet/Sections";
-import Movements from "@/pages/Wallet/Movements";
-import ListHome from "@/pages/List/Home";
-import Backups from "@/pages/Backups";
-import Settings from "@/pages/Settings";
-import About from "@/pages/About";
-
-import { useScheduledTaskCleanup } from "./hooks/useScheduledTaskCleanup"
+import LoginPage from "@/pages/auth/Login";
+import RegisterPage from "@/pages/auth/Register";
+import AddNotaView from "@/pages/AddNotaView";
+import UserConfig from "./pages/user/UserConfig";
+import AboutPage from "@/pages/About";
+import RequireAuth from "@/components/auth/RequireAuth";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -21,36 +21,70 @@ const AnimatedRoutes = () => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
-        {/* Redirect to Start Page */}
+
+        {/* RUTA INICIAL */}
         <Route path="/" element={<StartRedirect />} />
 
-        {/* Wallet Routes */}
-        <Route path="/wallet" element={<WalletHome />} />
-        <Route path="/wallet/sections" element={<Sections />} />
-        <Route path="/wallet/movements" element={<Movements />} />
+        {/* PUBLICAS */}
+        <Route path="/login" element={
+          <GuestLayout>
+            <LoginPage />
+          </GuestLayout>
+        }/>
+        <Route path="/register" element={
+          <GuestLayout>
+            <RegisterPage />
+          </GuestLayout>
+        }/>
 
-        {/* List Routes */}
-        <Route path="/list" element={<ListHome />} />
+        {/* PRIVADAS */}
+        <Route
+          path="/home"
+          element={
+            <RequireAuth>
+              <DefaultLayout>
+                <AddNotaView />
+              </DefaultLayout>
+            </RequireAuth>
+          }
+        />
 
-        {/* Other Routes */}
-        <Route path="/backups" element={<Backups />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/about" element={<About />} />
+        <Route
+          path="/user/config"
+          element={
+            <RequireAuth>
+              <DefaultLayout>
+                <UserConfig />
+              </DefaultLayout>
+            </RequireAuth>
+          }
+        />
 
-        {/* Catch-all Route */}
-        <Route path="*" element={<StartRedirect />} />
+        <Route
+          path="/about"
+          element={
+            <RequireAuth>
+              <DefaultLayout>
+                <AboutPage/>
+              </DefaultLayout>
+            </RequireAuth>
+          }
+        />
+
+        {/* CUALQUIER OTRA → REDIRECT */}
+        <Route path="*" element={
+          <GuestLayout>
+            <StartRedirect />
+          </GuestLayout>
+        }/>
       </Routes>
     </AnimatePresence>
   );
 };
 
 const App: React.FC = () => {
-  useScheduledTaskCleanup();
-  
-
   return (
     <Router>
-      <NotificationsInitializer />
       <AnimatedRoutes />
     </Router>
   );

@@ -3,4 +3,10 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+
+  --hora-inicio-jornada: 08:00;
+  --hora-salida-comida-desde: 12:00;
+  --hora-salida-comida-hasta: 16:30;
+  --hora-fin-jornada: 18:00;
+  --duracion-max-comida-min: 60;
 }

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import UIButton from "@/components/UI/UIButton";
+import {
+  Button
+} from "waddle-ui"
 import UIToggle from "@/components/UI/UIToggle";
 import DrawerLink from "./DrawerLink";
 import { useTheme } from "@/hooks/useTheme";
+import { extractColorFromCssVar } from "@/utils/ExtractColorFromCssVar";
 
 type Props = {
   isOpen: boolean;
@@ -11,6 +14,7 @@ type Props = {
 };
 
 const Drawer: React.FC<Props> = ({ isOpen, onClose }) => {
+  const primaryColor = extractColorFromCssVar("--primary-color");
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -75,10 +79,8 @@ const Drawer: React.FC<Props> = ({ isOpen, onClose }) => {
           />
 
           <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            <DrawerLink path="/wallet" label="💰 Waddle Wallet" onClick={handleNavigate} />
-            <DrawerLink path="/list" label="📝 Waddle List" onClick={handleNavigate} />
-            {/* <DrawerLink path="/backups" label="☁️ Respaldos" onClick={handleNavigate} /> */}
-            <DrawerLink path="/settings" label="⚙️ Configuración" onClick={handleNavigate} />
+            <DrawerLink path="/home" label="📅 Calendario" onClick={handleNavigate} />
+            <DrawerLink path="/user/config" label="⚙️ Configuración" onClick={handleNavigate} />
             <DrawerLink path="/about" label="ℹ️ Sobre Waddle" onClick={handleNavigate} />
           </ul>
         </div>
@@ -86,9 +88,13 @@ const Drawer: React.FC<Props> = ({ isOpen, onClose }) => {
         <div>
           {deferredPrompt && (
             <div style={{ marginTop: "1rem" }}>
-              <UIButton onClick={handleInstallClick} variant="secondary" fullWidth>
+              <Button
+                color={primaryColor}
+                onClick={handleInstallClick}
+                fullWidth
+              >
                 📲 Instalar app
-              </UIButton>
+              </Button>
             </div>
           )}
 

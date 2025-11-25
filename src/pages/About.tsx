@@ -2,8 +2,6 @@ import React from "react";
 
 import { useKonamiUniversalCode  } from "@/hooks/useKonamiCode";
 
-import DefaultLayout from "@/layouts/DefaultLayout";
-
 const About: React.FC = () => {
   const playQuack = () => {
     const audio = new Audio("/duck.mp3");
@@ -17,7 +15,7 @@ const About: React.FC = () => {
   });
 
   return (
-    <DefaultLayout>
+    <>
       <div style={{ padding: "1.5rem", maxWidth: "600px", margin: "0 auto" }}>
         <h2 style={{ marginBottom: "1rem" }}>ℹ️ Sobre Waddle</h2>
 
@@ -70,7 +68,7 @@ const About: React.FC = () => {
         </p>
 
       </div>
-    </DefaultLayout>
+    </>
   );
 };
 
