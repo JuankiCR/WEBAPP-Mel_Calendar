@@ -32,7 +32,7 @@ messaging.onBackgroundMessage((payload) => {
   const { title, body } = payload.notification || {};
   self.registration.showNotification(title || 'Notificación', {
     body: body || '',
-    icon: '/pwa-192x192.png',
+    icon: '/pwa-192x192.jpeg',
     tag: 'waddle-general',
     renotify: true
   });
