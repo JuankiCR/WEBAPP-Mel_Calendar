@@ -16,6 +16,6 @@ messaging.onBackgroundMessage((payload) => {
   console.log("📦 Mensaje recibido en background:", payload);
   self.registration.showNotification(payload.notification.title, {
     body: payload.notification.body,
-    icon: "/pwa-192x192.png",
+    icon: "/pwa-192x192.jpeg",
   });
 });
