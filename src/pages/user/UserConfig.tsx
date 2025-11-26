@@ -3,7 +3,13 @@ import { useEffect, useMemo } from "react";
 import { Button, Input } from "waddle-ui";
 import { useTheme } from "@/hooks/useTheme";
 import { extractColorFromCssVar } from "@/utils/ExtractColorFromCssVar";
-import { getUserSettings, updateUserSettings, WorkingDay } from "@/services/userSettings";
+import { 
+  getUserSettings,
+  updateUserSettings,
+  WorkingDay
+} from "@/services/userSettings";
+import { createPushToken } from "@/lib/firebase";
+
 import "./UserConfig.css";
 
 type EditableVar = {
@@ -70,6 +76,23 @@ export default function UserConfig() {
       return value.trim() || "";
     }
     return "";
+  };
+
+  const handleEnableNotifications = async () => {
+    try {
+      const token = await createPushToken();
+
+      await updateUserSettings({ fcmToken: token });
+
+      console.log("✅ Notificaciones activadas, token guardado");
+      alert("Notificaciones activadas ✅");
+    } catch (err: any) {
+      console.error("Error activando notificaciones", err);
+      alert(
+        err?.message ||
+          "No se pudieron activar las notificaciones. Revisa la consola."
+      );
+    }
   };
 
   const themeLabel = useMemo(
@@ -144,10 +167,10 @@ export default function UserConfig() {
         themeOverrides: JSON.stringify(overrides ?? {}),
       });
 
-      console.log("Configuración guardada ✅");
+      alert("Configuración guardada ✅");
     } catch (err) {
       console.error(err);
-      console.log("Error al guardar configuración");
+      alert("Error al guardar configuración");
     }
   };
 
@@ -204,6 +227,17 @@ export default function UserConfig() {
           </div>
         </div>
 
+        <div className="settings-section">
+          <Button
+            color={primaryColor}
+            type="button"
+            onClick={handleEnableNotifications}
+            fullWidth
+          >
+            Activar notificaciones
+          </Button>
+        </div>
+
         {/* 🎨 Bloque Colores / Apariencia */}
         <div className="settings-section">
           <h2 className="settings-section-title">Colores</h2>
@@ -237,7 +271,7 @@ export default function UserConfig() {
             variant="ghost"
             onClick={resetThemeVars}
           >
-            Restablecer colores del tema {themeLabel}
+            Restablecer tema {themeLabel}
           </Button>
 
           <Button
@@ -245,7 +279,7 @@ export default function UserConfig() {
             type="button"
             onClick={handleSave}
           >
-            Guardar configuración
+            Guardar
           </Button>
         </footer>
       </section>

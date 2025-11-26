@@ -19,6 +19,7 @@ export type UserSettings = Models.Document & {
   timezone: string;
   workingDay?: string;       // JSON.stringify(WorkingDay)
   themeOverrides?: string;   // JSON.stringify(ThemeOverrides)
+  fcmToken?: string;
 };
 
 async function getOrCreateSettings(): Promise<UserSettings> {
@@ -64,7 +65,7 @@ export async function getUserSettings(): Promise<UserSettings> {
 }
 
 export async function updateUserSettings(
-  data: Partial<Pick<UserSettings, "workingDay" | "themeOverrides" | "timezone">>
+  data: Partial<Pick<UserSettings, "workingDay" | "themeOverrides" | "timezone" | "fcmToken">>
 ): Promise<UserSettings> {
   const current = await getOrCreateSettings();
 

@@ -14,14 +14,15 @@ importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js');
 
 // 🚀 Inicializa Firebase
-firebase.initializeApp({
-  apiKey: "AIzaSyBWqh2ml4INSiHpBhlN_GImjqsaCQA1YKg",
-  authDomain: "waddle-rb-duck.firebaseapp.com",
-  projectId: "waddle-rb-duck",
-  storageBucket: "waddle-rb-duck.firebasestorage.app",
-  messagingSenderId: "781257613224",
-  appId: "1:781257613224:web:24893bae0c6827d3e4479d",
-});
+const firebaseConfig = {
+  apiKey: "AIzaSyAXYT0eZzDM28jML3a0s0y-G-3Sz0Bqwl8",
+  authDomain: "mel-calendar.firebaseapp.com",
+  projectId: "mel-calendar",
+  storageBucket: "mel-calendar.firebasestorage.app",
+  messagingSenderId: "563668047822",
+  appId: "1:563668047822:web:2aa8b2287272f875c27d9f",
+  measurementId: "G-Z1GE2GHC07"
+};
 
 // 📬 Notificaciones push en segundo plano
 const messaging = firebase.messaging();
