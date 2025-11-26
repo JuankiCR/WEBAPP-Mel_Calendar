@@ -95,6 +95,7 @@
 
 .settings-footer {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
   margin-top: 0.5rem;
 }
